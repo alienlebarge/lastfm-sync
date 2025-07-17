@@ -36,7 +36,13 @@ return [
 Synchronization via POST webhook:
 
 ```bash
-curl -X POST "https://your-site.com/webhook/sync-jams" -d "secret=your-webhook-secret"
+curl -X POST "https://your-site.com/lastfm-sync/cron/sync-jams" -d "secret=your-webhook-secret"
+```
+
+Or call the URL directly with GET parameter:
+
+```bash
+curl -X POST "https://your-site.com/lastfm-sync/cron/sync-jams?secret=your-webhook-secret"
 ```
 
 ### Page Methods

@@ -2,7 +2,7 @@
 
 return [
     [
-        'pattern' => 'webhook/sync-jams',
+        'pattern' => 'lastfm-sync/cron/sync-jams',
         'method' => 'POST',
         'action' => function () {
             // Check security token
