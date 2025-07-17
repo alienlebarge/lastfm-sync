@@ -3,7 +3,7 @@
 return [
     [
         'pattern' => 'lastfm-sync/cron/sync-jams',
-        'method' => 'POST',
+        'method' => 'POST|GET',
         'action' => function () {
             // Check security token
             $webhookSecret = kirby()->option('alienlebarge.lastfm-sync.webhookSecret');
