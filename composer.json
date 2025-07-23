@@ -3,7 +3,7 @@
   "description": "Kirby plugin to synchronize loved tracks from Last.fm and automatically create jam pages",
   "license": "MIT",
   "type": "kirby-plugin",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "authors": [
     {
       "name": "Cédric Aellen",

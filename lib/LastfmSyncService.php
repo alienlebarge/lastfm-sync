@@ -48,8 +48,10 @@ class LastfmSyncService
         // Import tracks
         $result = $this->importTracks($tracks);
         
-        // Clear pages cache
-        kirby()->cache('pages')->flush();
+        // Clear all caches and force regeneration if new items were imported
+        if ($result['imported'] > 0) {
+            $this->clearCacheAndRegenerate();
+        }
         
         return $result;
     }
@@ -282,6 +284,56 @@ class LastfmSyncService
 
         } catch (Exception $e) {
             return '';
+        }
+    }
+
+    /**
+     * Clears all relevant caches and forces regeneration of jam-related pages
+     */
+    private function clearCacheAndRegenerate(): void
+    {
+        try {
+            // Clear all Kirby caches
+            kirby()->cache('pages')->flush();
+            
+            // Also clear UUID cache if it exists
+            if (kirby()->cache('uuid')) {
+                kirby()->cache('uuid')->flush();
+            }
+            
+            // Force regeneration of key pages that display jams
+            $this->regenerateJamPages();
+            
+            error_log("[LASTFM SYNC] Cache cleared and pages regenerated successfully");
+            
+        } catch (Exception $e) {
+            error_log("[LASTFM SYNC] Error clearing cache: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Forces regeneration of pages that display jams
+     */
+    private function regenerateJamPages(): void
+    {
+        try {
+            // Get pages that typically display jams (home page, jams index, etc.)
+            $pagesToRegenerate = [
+                kirby()->site()->homePage(),
+                kirby()->site()->find('jams'),
+                kirby()->site()->find('blog')
+            ];
+
+            foreach ($pagesToRegenerate as $page) {
+                if ($page && $page->exists()) {
+                    // Force page render to regenerate cache
+                    $page->render();
+                    error_log("[LASTFM SYNC] Regenerated cache for page: " . $page->id());
+                }
+            }
+            
+        } catch (Exception $e) {
+            error_log("[LASTFM SYNC] Error regenerating jam pages: " . $e->getMessage());
         }
     }
 }
