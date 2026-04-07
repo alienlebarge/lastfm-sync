@@ -61,7 +61,7 @@ class LastfmSyncService
      */
     private function fetchTracksFromLastfm(int $limit): array
     {
-        $url = "http://ws.audioscrobbler.com/2.0/?method=user.getlovedtracks&user={$this->user}&api_key={$this->apiKey}&format=json&limit={$limit}";
+        $url = "https://ws.audioscrobbler.com/2.0/?method=user.getlovedtracks&user={$this->user}&api_key={$this->apiKey}&format=json&limit={$limit}";
         
         $request = Remote::get($url);
         
@@ -158,7 +158,7 @@ class LastfmSyncService
      */
     private function fetchTrackDetails(object $track): array
     {
-        $url = "http://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key={$this->apiKey}&artist=" . urlencode($track->artist->name) . "&track=" . urlencode($track->name) . "&format=json";
+        $url = "https://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key={$this->apiKey}&artist=" . urlencode($track->artist->name) . "&track=" . urlencode($track->name) . "&format=json";
         
         $request = Remote::get($url);
         
