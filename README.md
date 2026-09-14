@@ -64,6 +64,7 @@ $result = $syncService->sync(20);
 
 ```json
 {
+    "status": "OK",
     "success": true,
     "message": "Jams synchronization completed via Last.fm plugin",
     "data": {
@@ -78,6 +79,21 @@ $result = $syncService->sync(20);
 ## Security
 
 The webhook uses a secret token for authentication. Configure `webhookSecret` in your options.
+
+**It has no default.** The endpoint answers `503` until a secret is set, rather than running unauthenticated — worth knowing if you fill the option from an environment variable, since a missing `.env` then fails closed instead of exposing the endpoint. The placeholder used in this README is refused for the same reason: it is published here.
+
+Secrets are compared with `hash_equals()`.
+
+## Monitoring a scheduled task
+
+Every response carries a `status` field, and **only a successful run contains `OK`**:
+
+```json
+{ "status": "OK", "success": true, "message": "…", "data": { … } }
+{ "status": "FAILED", "success": false, "error": "…" }
+```
+
+Failures say `FAILED` rather than relying on the `success` flag, so a host that monitors a task by matching a string in the body cannot pass on an error. HTTP status codes are set in parallel: `403` on an invalid secret, `503` when no secret is configured, `500` on a failure during synchronization.
 
 ## License
 

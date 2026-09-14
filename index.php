@@ -20,14 +20,16 @@ Kirby::plugin('alienlebarge/lastfm-sync', [
         'apiKey' => null,
         'user' => null,
         'webhookLimit' => 20,
-        'webhookSecret' => 'your-secret-key-here',
+        // No default on purpose: the route refuses to run until a site
+        // sets this, rather than accepting a secret published in this repo.
+        'webhookSecret' => null,
         'contentDir' => 'jams'
     ],
     
     'routes' => require __DIR__ . '/plugin/routes.php',
     
     'pageMethods' => [
-        'syncJams' => function (int $limit = null) {
+        'syncJams' => function (?int $limit = null) {
             $limit = $limit ?? kirby()->option('alienlebarge.lastfm-sync.webhookLimit', 20);
             $service = new LastfmSyncService();
             return $service->sync($limit);
